@@ -18,14 +18,15 @@ func LoadConfig(conf interface{}, defaultConf interface{}) {
 
 //GetVariants extract variants from monitorable config
 func GetVariants(conf interface{}) []models.Variant {
+	// Verify Params
+	if reflect.ValueOf(conf).Kind() != reflect.Map {
+		panic(fmt.Sprintf("wrong GetVariants parameters: conf need to be a map[coreModels.Variant] not a %s", reflect.ValueOf(conf).Kind()))
+	}
+
 	var variants []models.Variant
-	if reflect.TypeOf(conf).Kind() == reflect.Map {
-		keys := reflect.ValueOf(conf).MapKeys()
-		for _, k := range keys {
-			variants = append(variants, models.Variant(k.String()))
-		}
-	} else {
-		variants = append(variants, models.DefaultVariant)
+	keys := reflect.ValueOf(conf).MapKeys()
+	for _, k := range keys {
+		variants = append(variants, models.Variant(k.String()))
 	}
 
 	return variants

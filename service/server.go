@@ -5,6 +5,8 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/monitoror/monitoror/pkg/system"
+
 	"github.com/monitoror/monitoror/cli"
 
 	"github.com/monitoror/monitoror/config"
@@ -52,7 +54,8 @@ func Init(config *config.Config) *Server {
 }
 
 func (s *Server) Start() {
-	cli.PrintServerStartup(s.store.CoreConfig.Port)
+	ips, _ := system.ListLocalhostIpv4()
+	cli.PrintServerStartup(ips, s.store.CoreConfig.Port)
 	log.Fatal(s.Echo.Start(fmt.Sprintf(":%d", s.store.CoreConfig.Port)))
 }
 

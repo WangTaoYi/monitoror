@@ -134,7 +134,7 @@ func (cu *configUsecase) verifyTile(configBag *models.ConfigBag, tile *models.Ti
 		return
 	}
 
-	// Group tile, parse and call verifyTile for each grouped tile
+	// RouterGroup tile, parse and call verifyTile for each grouped tile
 	if tile.Type == GroupTileType {
 		if groupTile != nil {
 			configBag.AddErrors(models.ConfigError{
