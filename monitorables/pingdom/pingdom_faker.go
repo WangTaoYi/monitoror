@@ -5,6 +5,7 @@ package pingdom
 import (
 	uiConfig "github.com/monitoror/monitoror/api/config/usecase"
 	coreConfig "github.com/monitoror/monitoror/config"
+	"github.com/monitoror/monitoror/internal/pkg/monitorable"
 	coreModels "github.com/monitoror/monitoror/models"
 	"github.com/monitoror/monitoror/monitorables/pingdom/api"
 	pingdomDelivery "github.com/monitoror/monitoror/monitorables/pingdom/api/delivery/http"
@@ -14,6 +15,8 @@ import (
 )
 
 type Monitorable struct {
+	monitorable.DefaultMonitorableFaker
+
 	store *store.Store
 }
 
@@ -28,17 +31,13 @@ func NewMonitorable(store *store.Store) *Monitorable {
 }
 
 func (m *Monitorable) GetDisplayName() string { return "Pingdom (faker)" }
-func (m *Monitorable) GetVariants() []string {
-	return []coreModels.VariantName{coreConfig.DefaultVariant}
-}
-func (m *Monitorable) Validate(variant string) (bool, error) { return true, nil }
 
-func (m *Monitorable) Enable(variant string) {
+func (m *Monitorable) Enable(variant coreModels.VariantName) {
 	usecase := pingdomUsecase.NewPingdomUsecase()
 	delivery := pingdomDelivery.NewPingdomDelivery(usecase)
 
 	// EnableTile route to echo
-	route := m.store.MonitorableRouter.RouterGroup("/pingdom", variant).GET("/pingdom", delivery.GetCheck)
+	route := m.store.MonitorableRouter.Group("/pingdom", variant).GET("/pingdom", delivery.GetCheck)
 
 	// EnableTile data for config hydration
 	m.store.UIConfigManager.EnableTile(api.PingdomCheckTileType, variant,

@@ -5,6 +5,7 @@ package jenkins
 import (
 	uiConfig "github.com/monitoror/monitoror/api/config/usecase"
 	coreConfig "github.com/monitoror/monitoror/config"
+	"github.com/monitoror/monitoror/internal/pkg/monitorable"
 	coreModels "github.com/monitoror/monitoror/models"
 	"github.com/monitoror/monitoror/monitorables/jenkins/api"
 	jenkinsDelivery "github.com/monitoror/monitoror/monitorables/jenkins/api/delivery/http"
@@ -14,6 +15,8 @@ import (
 )
 
 type Monitorable struct {
+	monitorable.DefaultMonitorableFaker
+
 	store *store.Store
 }
 
@@ -28,18 +31,14 @@ func NewMonitorable(store *store.Store) *Monitorable {
 }
 
 func (m *Monitorable) GetDisplayName() string { return "Jenkins (faker)" }
-func (m *Monitorable) GetVariants() []string {
-	return []coreModels.VariantName{coreConfig.DefaultVariant}
-}
-func (m *Monitorable) Validate(variant string) (bool, error) { return true, nil }
 
-func (m *Monitorable) Enable(variant string) {
+func (m *Monitorable) Enable(variant coreModels.VariantName) {
 	usecase := jenkinsUsecase.NewJenkinsUsecase()
 	delivery := jenkinsDelivery.NewJenkinsDelivery(usecase)
 
 	// EnableTile route to echo
-	routerGroup := m.store.MonitorableRouter.RouterGroup("/jenkins", variant)
-	route := routerGroup.GET("/build", delivery.GetBuild)
+	routeGroup := m.store.MonitorableRouter.Group("/jenkins", variant)
+	route := routeGroup.GET("/build", delivery.GetBuild)
 
 	// EnableTile data for config hydration
 	m.store.UIConfigManager.EnableTile(api.JenkinsBuildTileType, variant,

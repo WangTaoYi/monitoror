@@ -5,6 +5,7 @@ package github
 import (
 	uiConfig "github.com/monitoror/monitoror/api/config/usecase"
 	coreConfig "github.com/monitoror/monitoror/config"
+	"github.com/monitoror/monitoror/internal/pkg/monitorable"
 	coreModels "github.com/monitoror/monitoror/models"
 	"github.com/monitoror/monitoror/monitorables/github/api"
 	githubDelivery "github.com/monitoror/monitoror/monitorables/github/api/delivery/http"
@@ -14,6 +15,8 @@ import (
 )
 
 type Monitorable struct {
+	monitorable.DefaultMonitorableFaker
+
 	store *store.Store
 }
 
@@ -28,20 +31,18 @@ func NewMonitorable(store *store.Store) *Monitorable {
 	return monitorable
 }
 
-func (m *Monitorable) GetDisplayName() string { return "GitHub (faker)" }
-func (m *Monitorable) GetVariants() []string {
-	return []coreModels.VariantName{coreConfig.DefaultVariant}
+func (m *Monitorable) GetDisplayName() string {
+	return "GitHub (faker)"
 }
-func (m *Monitorable) Validate(variant string) (bool, error) { return true, nil }
 
-func (m *Monitorable) Enable(variant string) {
+func (m *Monitorable) Enable(variant coreModels.VariantName) {
 	usecase := githubUsecase.NewGithubUsecase()
 	delivery := githubDelivery.NewGithubDelivery(usecase)
 
 	// EnableTile route to echo
-	routerGroup := m.store.MonitorableRouter.RouterGroup("/github", variant)
-	routeCount := routerGroup.GET("/count", delivery.GetCount)
-	routeChecks := routerGroup.GET("/checks", delivery.GetChecks)
+	routeGroup := m.store.MonitorableRouter.Group("/github", variant)
+	routeCount := routeGroup.GET("/count", delivery.GetCount)
+	routeChecks := routeGroup.GET("/checks", delivery.GetChecks)
 
 	// EnableTile data for config hydration
 	m.store.UIConfigManager.EnableTile(api.GithubCountTileType, variant,

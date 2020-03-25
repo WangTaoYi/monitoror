@@ -19,7 +19,7 @@ func InitMockAndStore() (*serviceMocks.MonitorableRouter, *serviceMocks.Monitora
 	).Return(&echo.Route{Path: "/path"})
 
 	mockRouter := new(serviceMocks.MonitorableRouter)
-	mockRouter.On("RouterGroup",
+	mockRouter.On("Group",
 		mock.AnythingOfType("string"),
 		mock.AnythingOfType("models.VariantName"),
 	).Return(mockRouterGroup)

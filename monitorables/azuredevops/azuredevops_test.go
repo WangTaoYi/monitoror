@@ -14,8 +14,8 @@ func TestNewMonitorable(t *testing.T) {
 
 	// init Env
 	// OK
-	_ = os.Setenv("MO_MONITORABLE_AZUREDEVOPS_URL", "https://azure.example.com/myProject1")
-	_ = os.Setenv("MO_MONITORABLE_AZUREDEVOPS_TOKEN", "xxx")
+	_ = os.Setenv("MO_MONITORABLE_AZUREDEVOPS_VARIANT0_URL", "https://azure.example.com/myProject1")
+	_ = os.Setenv("MO_MONITORABLE_AZUREDEVOPS_VARIANT0_TOKEN", "xxx")
 	// Missing Token
 	_ = os.Setenv("MO_MONITORABLE_AZUREDEVOPS_VARIANT1_URL", "https://azure.example.com/myProject2")
 	// Url broken
@@ -29,7 +29,7 @@ func TestNewMonitorable(t *testing.T) {
 	assert.NotNil(t, monitorable.GetDisplayName())
 
 	// GetVariants and check
-	if assert.Len(t, monitorable.GetVariants(), 3) {
+	if assert.Len(t, monitorable.GetVariants(), 4) {
 		_, err := monitorable.Validate("variant1")
 		assert.Error(t, err)
 		_, err = monitorable.Validate("variant2")
@@ -44,7 +44,7 @@ func TestNewMonitorable(t *testing.T) {
 	}
 
 	// Test calls
-	mockRouter.AssertNumberOfCalls(t, "RouterGroup", 1)
+	mockRouter.AssertNumberOfCalls(t, "Group", 1)
 	mockRouterGroup.AssertNumberOfCalls(t, "GET", 2)
 	mockConfigManager.AssertNumberOfCalls(t, "RegisterTile", 2)
 	mockConfigManager.AssertNumberOfCalls(t, "EnableTile", 2)

@@ -5,6 +5,7 @@ package azuredevops
 import (
 	uiConfig "github.com/monitoror/monitoror/api/config/usecase"
 	coreConfig "github.com/monitoror/monitoror/config"
+	"github.com/monitoror/monitoror/internal/pkg/monitorable"
 	coreModels "github.com/monitoror/monitoror/models"
 	"github.com/monitoror/monitoror/monitorables/azuredevops/api"
 	azuredevopsDelivery "github.com/monitoror/monitoror/monitorables/azuredevops/api/delivery/http"
@@ -14,6 +15,7 @@ import (
 )
 
 type Monitorable struct {
+	monitorable.DefaultMonitorableFaker
 	store *store.Store
 }
 
@@ -28,20 +30,18 @@ func NewMonitorable(store *store.Store) *Monitorable {
 	return monitorable
 }
 
-func (m *Monitorable) GetDisplayName() string { return "Azure DevOps (faker)" }
-func (m *Monitorable) GetVariants() []string {
-	return []coreModels.VariantName{coreConfig.DefaultVariant}
+func (m *Monitorable) GetDisplayName() string {
+	return "Azure DevOps (faker)"
 }
-func (m *Monitorable) Validate(variant string) (bool, error) { return true, nil }
 
-func (m *Monitorable) Enable(variant string) {
+func (m *Monitorable) Enable(variant coreModels.VariantName) {
 	usecase := azuredevopsUsecase.NewAzureDevOpsUsecase()
 	delivery := azuredevopsDelivery.NewAzureDevOpsDelivery(usecase)
 
 	// EnableTile route to echo
-	routerGroup := m.store.MonitorableRouter.RouterGroup("/azuredevops", variant)
-	routeBuild := routerGroup.GET("/build", delivery.GetBuild)
-	routeRelease := routerGroup.GET("/release", delivery.GetRelease)
+	routeGroup := m.store.MonitorableRouter.Group("/azuredevops", variant)
+	routeBuild := routeGroup.GET("/build", delivery.GetBuild)
+	routeRelease := routeGroup.GET("/release", delivery.GetRelease)
 
 	// EnableTile data for config hydration
 	m.store.UIConfigManager.EnableTile(api.AzureDevOpsBuildTileType, variant,
