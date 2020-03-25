@@ -23,9 +23,9 @@ func TestPrintMonitorableHeader(t *testing.T) {
 
 func TestPrintMonitorable(t *testing.T) {
 	PrintMonitorable("TEST", nil, nil)
-	PrintMonitorable("TEST", []coreModels.Variant{coreModels.DefaultVariant}, nil)
-	PrintMonitorable("TEST", []coreModels.Variant{coreModels.DefaultVariant, "variant1"}, map[coreModels.Variant]error{"variant2": errors.New("boom")})
-	PrintMonitorable("TEST", nil, map[coreModels.Variant]error{"default": errors.New("boom")})
+	PrintMonitorable("TEST", []coreModels.VariantName{coreModels.DefaultVariant}, nil)
+	PrintMonitorable("TEST", []coreModels.VariantName{coreModels.DefaultVariant, "variant1"}, map[coreModels.VariantName]error{"variant2": errors.New("boom")})
+	PrintMonitorable("TEST", nil, map[coreModels.VariantName]error{"default": errors.New("boom")})
 }
 
 func TestPrintMonitorableFooter(t *testing.T) {

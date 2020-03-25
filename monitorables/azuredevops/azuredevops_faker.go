@@ -28,8 +28,10 @@ func NewMonitorable(store *store.Store) *Monitorable {
 	return monitorable
 }
 
-func (m *Monitorable) GetDisplayName() string                { return "Azure DevOps (faker)" }
-func (m *Monitorable) GetVariants() []string                 { return []coreModels.Variant{coreConfig.DefaultVariant} }
+func (m *Monitorable) GetDisplayName() string { return "Azure DevOps (faker)" }
+func (m *Monitorable) GetVariants() []string {
+	return []coreModels.VariantName{coreConfig.DefaultVariant}
+}
 func (m *Monitorable) Validate(variant string) (bool, error) { return true, nil }
 
 func (m *Monitorable) Enable(variant string) {

@@ -14,7 +14,7 @@ func TestLoadConfig(t *testing.T) {
 	_ = os.Setenv("MO_MONITORABLE_PING_TIMEOUT", "1337")
 	_ = os.Setenv("MO_MONITORABLE_PING_TEST_TIMEOUT", "1337")
 
-	conf := make(map[coreModels.Variant]pingConfig.Ping)
+	conf := make(map[coreModels.VariantName]pingConfig.Ping)
 	LoadConfig(&conf, pingConfig.Default)
 
 	assert.Len(t, conf, 2)
@@ -24,13 +24,13 @@ func TestLoadConfig(t *testing.T) {
 }
 
 func TestGetVariants(t *testing.T) {
-	conf := map[coreModels.Variant]pingConfig.Ping{
+	conf := map[coreModels.VariantName]pingConfig.Ping{
 		"test": {},
 	}
 
 	variants := GetVariants(conf)
 	assert.Len(t, variants, 1)
-	assert.Equal(t, coreModels.Variant("test"), variants[0])
+	assert.Equal(t, coreModels.VariantName("test"), variants[0])
 	assert.Panics(t, func() { GetVariants("test") })
 }
 

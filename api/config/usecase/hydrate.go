@@ -75,7 +75,7 @@ func (cu *configUsecase) hydrateTile(configBag *models.ConfigBag, tile *models.T
 	// Add initial max delay from config
 	tile.InitialMaxDelay = &tileConfig.InitialMaxDelay
 
-	// Remove Params / Variant
+	// Remove Params / VariantName
 	tile.Params = nil
 	tile.ConfigVariant = ""
 }

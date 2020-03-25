@@ -19,7 +19,7 @@ func TestConfigFileNotFoundError(t *testing.T) {
 
 func TestConfigVersionFormatError(t *testing.T) {
 	err := &ConfigVersionFormatError{WrongVersion: "10"}
-	assert.Equal(t, "json: cannot unmarshal 10 into Go struct field Config.Version of type string and X.y format", err.Error())
+	assert.Equal(t, "json: cannot unmarshal 10 into Go struct field Config.ToVersion of type string and X.y format", err.Error())
 }
 
 func TestConfigUnmarshalError(t *testing.T) {
