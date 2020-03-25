@@ -113,21 +113,9 @@ func PrintMonitorableFooter(isProduction bool) {
 	colorer.Printf(monitorableFooter, colorer.Blue(fmt.Sprintf(documentation, documentationVersion)))
 }
 
-func PrintServerStartup(ips []string, port int) {
+func PrintServerStartup(ip string, port int) {
 	colorer.Printf(echoStartup)
-
-	// in case of empty ips
-	if len(ips) == 0 {
-		ips = append(ips, "127.0.0.1")
-	}
-
-	for _, ip := range ips {
-		if ip == "127.0.0.1" {
-			ip = "localhost"
-		}
-
-		colorer.Printf("   %s\n", colorer.Blue(fmt.Sprintf("http://%s:%d", ip, port)))
-	}
-
+	colorer.Printf("   %s\n", colorer.Blue(fmt.Sprintf("http://localhost:%d", port)))
+	colorer.Printf("   %s\n", colorer.Blue(fmt.Sprintf("http://%s:%d", ip, port)))
 	colorer.Println()
 }

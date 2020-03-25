@@ -34,5 +34,5 @@ func TestPrintMonitorableFooter(t *testing.T) {
 }
 
 func TestPrintServerStartup(t *testing.T) {
-	PrintServerStartup(nil, 8080)
+	PrintServerStartup("1.2.3.4", 8080)
 }

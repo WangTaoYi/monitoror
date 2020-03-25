@@ -54,8 +54,7 @@ func Init(config *config.Config) *Server {
 }
 
 func (s *Server) Start() {
-	ips, _ := system.ListLocalhostIpv4()
-	cli.PrintServerStartup(ips, s.store.CoreConfig.Port)
+	cli.PrintServerStartup(system.GetNetworkIP(), s.store.CoreConfig.Port)
 	log.Fatal(s.Echo.Start(fmt.Sprintf(":%d", s.store.CoreConfig.Port)))
 }
 
